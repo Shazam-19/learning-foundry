@@ -1,14 +1,41 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.13;
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.26;
 
+/**
+ * @title Counter
+ * @notice A simple on-chain counter that can be incremented or decremented.
+ * @dev Demonstrates basic state variables, custom errors, and external functions.
+ *      The counter is stored permanently on the blockchain and starts at zero.
+ */
 contract Counter {
-    uint256 public number;
+    /// @notice The current value of the counter. Publicly readable by anyone.
+    uint256 public count;
 
-    function setNumber(uint256 newNumber) public {
-        number = newNumber;
+    /**
+     * @notice Thrown when `dec()` is called but the counter is already at zero.
+     * @dev Using a custom error instead of `require` saves gas on revert.
+     */
+    error CounterUnderflow();
+
+    /**
+     * @notice Increases the counter by 1.
+     * @dev Safe from overflow in Solidity 0.8+ — arithmetic reverts automatically
+     *      if the value exceeds the maximum uint256 (~1.15 × 10^77).
+     */
+    function inc() external {
+        count += 1;
     }
 
-    function increment() public {
-        number++;
+    /**
+     * @notice Decreases the counter by 1.
+     * @dev Reverts with `CounterUnderflow` if `count` is already 0,
+     *      preventing unsigned integer underflow (which would otherwise wrap
+     *      around to a very large number in older Solidity versions).
+     */
+    function dec() external {
+        if (count == 0) {
+            revert CounterUnderflow();
+        }
+        count -= 1;
     }
 }
