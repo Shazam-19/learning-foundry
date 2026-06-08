@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.26;
 
+// This console feature is only available during testing and allows us to print debug information.
+// It should be removed or commented out in production code to save gas and avoid unnecessary imports.
+import "forge-std/console.sol";
+
 /**
  * @title Counter
  * @notice A simple on-chain counter that can be incremented or decremented.
@@ -23,6 +27,7 @@ contract Counter {
      *      if the value exceeds the maximum uint256 (~1.15 × 10^77).
      */
     function inc() external {
+        console.log("Current count before incrementing:", count);
         count += 1;
     }
 
