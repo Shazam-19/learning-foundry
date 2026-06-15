@@ -20,4 +20,14 @@ contract AuthTest is Test {
         wallet.setOwner(payable(newOwner));
         assertEq(wallet.owner(), newOwner);
     }
+
+    function testSetOwnerByNonOwnerShouldRevert() public {
+        address newOwner = address(0x123);
+
+        // Simulate a call from a non-owner
+        vm.prank(address(0x456));
+
+        vm.expectRevert("Not the owner");
+        wallet.setOwner(payable(newOwner));
+    }
 }
