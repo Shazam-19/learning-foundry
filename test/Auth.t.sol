@@ -30,4 +30,23 @@ contract AuthTest is Test {
         vm.expectRevert("Not the owner");
         wallet.setOwner(payable(newOwner));
     }
+
+    function testSetOwnerMultipleTimes() public {
+        // The wallet owner is initially the deployer (this contract)
+        // msg.sender = address(this)
+        wallet.setOwner(payable(address(0x123)));
+
+        vm.startPrank(address(0x123)); // Now the owner is address(0x123)
+
+        // msg.msg.sender is now address(0x123), so this should succeed
+        wallet.setOwner(payable(address(0x123)));
+        wallet.setOwner(payable(address(0x123)));
+        wallet.setOwner(payable(address(0x123)));
+
+        vm.stopPrank();
+
+        vm.expectRevert("Not the owner");
+        // msg.sender is now address(this) again, which is not the owner anymore
+        wallet.setOwner(payable(address(0x456))); // This should revert
+    }
 }
