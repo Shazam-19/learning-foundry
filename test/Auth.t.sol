@@ -14,4 +14,10 @@ contract AuthTest is Test {
     function testOwnerIsDeployer() public view {
         assertEq(wallet.owner(), address(this));
     }
+
+    function testSetOwner() public {
+        address newOwner = address(0x123);
+        wallet.setOwner(payable(newOwner));
+        assertEq(wallet.owner(), newOwner);
+    }
 }
